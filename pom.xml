@@ -82,7 +82,7 @@
                         <manifest>
                             <classpathPrefix>lib/</classpathPrefix>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.aliyun.demo.IngestionUtil</mainClass>
+                            <mainClass>com.aliyun.demo.oss.OSSUtil</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

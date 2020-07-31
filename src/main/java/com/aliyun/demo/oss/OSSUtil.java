@@ -270,20 +270,19 @@ public class OSSUtil implements Closeable {
             if (s.getKey().contains(sourcePath)) {
                 String fileName = s.getKey().substring(s.getKey().lastIndexOf("/") + 1);
                 String destinationFileName = targetPath + fileName;
-                copyfile(bucketName, s.getKey(), destinationFileName);
-                boolean copy_check_flag = ossClient.doesObjectExist(bucketName, destinationFileName);
-                if (copy_check_flag) {
+                copyFile(bucketName, s.getKey(), destinationFileName);
+                boolean copyCheckFlag = ossClient.doesObjectExist(bucketName, destinationFileName);
+                if (copyCheckFlag) {
                     deleteFile(bucketName, s.getKey());
                 }
             }
         }
     }
 
-    public void copyfile(String bucketName, String sourceFileName, String destinationFileName) {
+    public void copyFile(String bucketName, String sourceFileName, String destinationFileName) {
         SimplifiedObjectMeta objectMeta = ossClient.getSimplifiedObjectMeta(bucketName, sourceFileName);
 
         if (objectMeta.getSize() > 1024 * 1024 * 1024) {
-            System.out.println("over 1G move:" + objectMeta.getSize());
             InitiateMultipartUploadRequest initiateMultipartUploadRequest = new InitiateMultipartUploadRequest(bucketName, destinationFileName);
             InitiateMultipartUploadResult initiateMultipartUploadResult = ossClient.initiateMultipartUpload(initiateMultipartUploadRequest);
             String uploadId = initiateMultipartUploadResult.getUploadId();
@@ -325,7 +324,6 @@ public class OSSUtil implements Closeable {
                     bucketName, destinationFileName, uploadId, partETags);
             ossClient.completeMultipartUpload(completeMultipartUploadRequest);
         } else {
-            System.out.println("low 1G  move");
             CopyObjectResult result = ossClient.copyObject(bucketName, sourceFileName, bucketName, destinationFileName);
             // System.out.println("ETag: " + result.getETag() + " LastModified: " + result.getLastModified());
         }
